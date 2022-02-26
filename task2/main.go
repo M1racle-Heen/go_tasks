@@ -2,14 +2,28 @@ package main
 
 import (
 	"fmt"
+	"sort"
 	"strings"
 )
 
 func main() {
-	// for i, r := range "Hello, 世界" {
-	// 	fmt.Printf("Index %d has rune: %c\n", i, r)
-	// }
 	fmt.Println(ParsePhone("1 2 3 4 5 6 7 8 9 0"))
+
+	fmt.Println(Anagram("йцукенгшщзхъфывапролджэячсмитьбю", "юэъхжбдзьлщтоширгмпнсаечвкяыуфцй"))
+
+	a := []int{1, 3, 4, 5, 6, 7, 8, 2, 2, 2, 2, 6}
+	fmt.Println(FindEvens(a))
+
+	fmt.Println(SliceProduct(a))
+
+	fmt.Println(Unique(a))
+
+	b := make(map[string]int)
+	b["b1"] = 10
+	b["b2"] = 20
+	fmt.Println(InvertMap(b))
+
+	fmt.Println(TopCharacters("банан", 2))
 }
 
 // ParsePhone parses a string of numbers into the format (123) 456-7890.
@@ -18,6 +32,8 @@ func main() {
 // For example, ParsePhone("123-456-7890") => "(123) 456-7890"
 //              ParsePhone("1 2 3 4 5 6 7 8 9 0") => "(123) 456-7890"
 func ParsePhone(phone string) string {
+	// TODO
+
 	str := "("
 	s := strings.Replace(phone, " ", "", -1)
 	s = strings.Replace(s, "-", "", -1)
@@ -38,28 +54,71 @@ func ParsePhone(phone string) string {
 // This function is NOT case sensitive and should handle UTF-8
 func Anagram(s1, s2 string) bool {
 	// TODO
-	return false
+
+	if len(s1) != len(s2) {
+		return false
+	}
+	n1 := strings.Split(s1, "")
+	sort.Strings(n1)
+	n2 := strings.Split(s2, "")
+	sort.Strings(n2)
+
+	for i := 0; i < len(n1); i++ {
+		if n1[i] != n2[i] {
+			return false
+		}
+	}
+
+	return true
+
 }
 
 // FindEvens filters out all odd numbers from input slice.
 // Result should retain the same ordering as the input.
 func FindEvens(e []int) []int {
 	// TODO
-	return nil
+
+	result := make([]int, 0)
+	for _, item := range e {
+		if item%2 == 0 {
+			result = append(result, item)
+		}
+	}
+	return result
 }
 
 // SliceProduct returns the product of all elements in the slice.
 // For example, SliceProduct([]int{1, 2, 3}) => 6
 func SliceProduct(e []int) int {
 	// TODO
-	return 0
+
+	result := 0
+	for _, item := range e {
+		result += item
+	}
+
+	return result
 }
 
 // Unique finds all distinct elements in the input array.
 // Result should retain the same ordering as the input.
 func Unique(e []int) []int {
 	// TODO
-	return nil
+	result := make([]int, 0)
+
+	for _, item := range e {
+		b := true
+		for _, item2 := range result {
+			if item2 == item {
+				b = false
+			}
+		}
+		if b {
+			result = append(result, item)
+		}
+	}
+
+	return result
 }
 
 // InvertMap inverts a mapping of strings to ints into a mapping of ints to strings.
@@ -67,7 +126,13 @@ func Unique(e []int) []int {
 // For this function, you can assume each value is unique.
 func InvertMap(kv map[string]int) map[int]string {
 	// TODO
-	return nil
+	result := make(map[int]string)
+
+	for k, v := range kv {
+		result[v] = k
+	}
+
+	return result
 }
 
 // TopCharacters finds characters that appear more than k times in the string.
@@ -75,5 +140,15 @@ func InvertMap(kv map[string]int) map[int]string {
 // This function MUST handle UTF-8 characters.
 func TopCharacters(s string, k int) map[rune]int {
 	// TODO
-	return nil
+	result := make(map[rune]int)
+
+	for _, item := range s {
+		result[item] += 1
+	}
+	for key, value := range result {
+		if value < k {
+			delete(result, key)
+		}
+	}
+	return result
 }
